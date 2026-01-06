@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <launch>
+    <!-- Scan Matchcer-->
     <node name="scan_matcher_node" pkg="k414" type="scan_matcher">
         <remap from="front_scan" to="/limo/laser_scan"/>
         <remap from="rear_scan"  to="/limo/laser_rear_scan"/>
@@ -25,5 +26,38 @@
         <param name="target_frame_id"   value="base_footprint"/>
     </node>
 
+    <!-- Move Base Navigation -->
+    <arg name="frame_prefix" default=""/>
+    <arg name="robot_name" default=""/>
+
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+        <rosparam file="$(find k414)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find k414)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find k414)/param/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find k414)/param/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find k414)/param/base_local_planner_holonomic_params.yaml" command="load" />
+        <rosparam file="$(find k414)/param/move_base_params.yaml" command="load" />
+
+        <!-- explicitly define frame ids for movebase -->
+        <param name="global_costmap/global_frame"                   value="$(arg frame_prefix)map"/>
+        <param name="global_costmap/robot_base_frame"               value="$(arg frame_prefix)base_footprint"/>
+        <param name="global_costmap/2d_obstacles_layer/scan/topic"  value="$(arg robot_name)scan"/>
+        <param name="global_costmap/3d_obstacles_layer/depth/topic" value="$(arg robot_name)camera/depth/points"/>
+        <param name="local_costmap/global_frame"                    value="$(arg frame_prefix)odom"/>
+        <param name="local_costmap/robot_base_frame"                value="$(arg frame_prefix)base_footprint"/>
+        <param name="local_costmap/2d_obstacles_layer/scan/topic"   value="$(arg robot_name)scan"/>
+        <param name="local_costmap/3d_obstacles_layer/depth/topic"  value="$(arg robot_name)camera/depth/points"/>
+    </node>
+
+    <!-- Map server -->
+    <arg name="map_file" default="$(find k414)/maps/map.yaml"/>
+    <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)" >
+        <param name="frame_id" value="$(arg frame_prefix)map" />
+    </node>
+
+
+    <!-- Gazebo Simulation -->
     <include file="$(find limo_gazebo_sim)/launch/limo_four_diff.launch" />
+
+
 </launch>
