@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<launch>
+    <node name="scan_matcher_node" pkg="k414" type="scan_matcher">
+        <remap from="front_scan" to="/limo/laser_scan"/>
+        <remap from="rear_scan"  to="/limo/laser_rear_scan"/>
+
+        <param name="active"            value="true"/>
+        <param name="publish_scan"      value="true"/>
+        <param name="publish_pcl"       value="false"/>
+
+        <param name="ranges_num"        value="1000"/>
+
+        <param name="min_scanner_range" value="0.05"/>
+        <param name="max_scanner_range" value="100.0"/>
+
+        <param name="min_x_range"       value="-100.0"/>
+        <param name="max_x_range"       value="100.0"/>
+        <param name="min_y_range"       value="-100.0"/>
+        <param name="max_y_range"       value="100.0"/>
+
+        <param name="fixed_frame_id"   value="odom"/>
+        <param name="target_frame_id"   value="base_footprint"/>
+    </node>
+
+    <!-- <include file="$(find limo_gazebo_sim)/launch/limo_four_diff.launch" /> -->
+</launch>
