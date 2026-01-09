@@ -50,14 +50,22 @@
     </node>
 
     <!-- Map server -->
-    <arg name="map_file" default="$(find k414)/maps/map.yaml"/>
+    <arg name="map_file" default="$(find k414)/maps/bookstore_map.yaml"/>
     <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)" >
         <param name="frame_id" value="$(arg frame_prefix)map" />
     </node>
 
+    <!-- AMCL used for localization -->
+    <include file="$(find k414)/launch/amcl.launch">
+        <arg name="frame_prefix" value="$(arg frame_prefix)"/>
+    </include>
 
     <!-- Gazebo Simulation -->
     <include file="$(find limo_gazebo_sim)/launch/limo_four_diff.launch" />
+    
+    <!-- Mission Manager -->
+    <node name="mission_planner_node" pkg="k414" type="mission_planner" />
 
-
+    <!-- load the steering node -->
+    <!-- <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering"/> -->
 </launch>
