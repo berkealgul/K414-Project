@@ -64,7 +64,7 @@
     <include file="$(find limo_gazebo_sim)/launch/limo_four_diff.launch" />
     
     <!-- Mission Manager -->
-    <node name="mission_planner_node" pkg="k414" type="mission_planner" />
+    <!-- <node name="mission_planner_node" pkg="k414" type="mission_planner" /> -->
 
     <!-- load the steering node -->
     <!-- <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering"/> -->
